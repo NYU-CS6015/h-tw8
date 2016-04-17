@@ -42,4 +42,41 @@ class ProfileController extends Controller
 
     	return view('profile', array('profile' => $profile, 'location' => $location));
     }
+
+    public function showUserList() {
+        $currentUser = Auth::user();
+        $currentUserId = $currentUser->id;
+
+        $allUsersExceptCurrent = DB::table('users')
+            ->where('id', '<>', $currentUserId)
+            ->get();
+
+        $userNames = [];
+        $addresses = [];
+
+        foreach ($allUsersExceptCurrent as $user) {
+            $fullName = $user->first_name . " " . $user->last_name;
+            array_push($userNames, $fullName);
+
+            $location = DB::table('residences')
+                ->where('userid', $user->id)
+                ->where('isActive', true)
+                ->first();
+
+            $address = "";
+            if (count($location) != 0) {
+                $address = $location->address1
+                        . " " 
+                        . $location->address2 
+                        . " "
+                        . $location->city
+                        . " "
+                        . $location->state
+                        . " "
+                        . $location->zipcode;
+                array_push($addresses, $address);
+            }
+        }
+        return view('userlist', array('userIds' => $userIds, 'userNames' => $userNames, 'addresses' => $addresses));
+    }
 }

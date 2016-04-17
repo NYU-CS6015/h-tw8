@@ -12,7 +12,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url ('') }}">Roommate Karma</a>
+                <a class="navbar-brand" href="{{ url ('') }}">Simple Twitter</a>
             </div>
             <!-- /.navbar-header -->
 
