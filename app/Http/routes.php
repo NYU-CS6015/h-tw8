@@ -70,5 +70,9 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::get('/user/list', 'ProfileController@showUserList')->middleware('auth');
 
+    Route::post('/user/list/follow/{userId}', 'FollowingController@follow');
+
+    Route::post('/user/list/unfollow/{userId}', 'FollowingController@unfollow');
+
     Route::get('/profile', 'ProfileController@show')->middleware('auth');
 });

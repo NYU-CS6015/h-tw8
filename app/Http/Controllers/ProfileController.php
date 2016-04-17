@@ -53,15 +53,30 @@ class ProfileController extends Controller
 
         $userNames = [];
         $addresses = [];
+        $userIds = [];
+        $followingStatus = [];
 
         foreach ($allUsersExceptCurrent as $user) {
             $fullName = $user->first_name . " " . $user->last_name;
             array_push($userNames, $fullName);
 
+            array_push($userIds, $user->id);
+
             $location = DB::table('residences')
                 ->where('userid', $user->id)
                 ->where('isActive', true)
                 ->first();
+
+            $record = DB::table('followings')
+                ->where('userId', $currentUserId)
+                ->where('followingId', $user->id)
+                ->first();
+
+            if (count($record) == 0) {
+                array_push($followingStatus, "notFollowed");
+            } else {
+                array_push($followingStatus, "Followed");
+            }
 
             $address = "";
             if (count($location) != 0) {
@@ -77,6 +92,9 @@ class ProfileController extends Controller
                 array_push($addresses, $address);
             }
         }
-        return view('userlist', array('userIds' => $userIds, 'userNames' => $userNames, 'addresses' => $addresses));
+        return view('userlist', array('userIds' => $userIds, 
+            'userNames' => $userNames, 
+            'addresses' => $addresses, 
+            'followingStatus' => $followingStatus));
     }
 }
